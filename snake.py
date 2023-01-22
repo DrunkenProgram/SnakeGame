@@ -193,19 +193,11 @@ while run:
                 run = False
             if event.key == pygame.K_UP:
                 player.game_control(NORTH)
-            if event.key == pygame.K_w:
-                player.game_control(NORTH)
             if event.key == pygame.K_DOWN:
-                player.game_control(SOUTH)
-            if event.key == pygame.K_s:
                 player.game_control(SOUTH)
             if event.key == pygame.K_RIGHT:
                 player.game_control(EAST)
-            if event.key == pygame.K_d:
-                player.game_control(EAST)
             if event.key == pygame.K_LEFT:
-                player.game_control(WEST)
-            if event.key == pygame.K_a:
                 player.game_control(WEST)
 
     draw_background(screen)
