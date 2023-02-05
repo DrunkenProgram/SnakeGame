@@ -182,8 +182,11 @@ pygame.init()
 pygame.display.set_caption('SNAKE GAME')
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 clock = pygame.time.Clock()
+background = pygame.mixer.Sound("sound effect/background.wav")
+background.play(-1)
 
 while run:
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -213,7 +216,7 @@ while run:
     position_check(player, food_group)
     player.draw_snake(screen)
     draw_food_group(food_group, screen)
-    speed = player.length/2
+    speed = player.length/3
     show_info(screen, player, speed)
     pygame.display.flip()
     pygame.display.update()
