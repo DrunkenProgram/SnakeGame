@@ -43,8 +43,6 @@ class Snake:
         self.length = 3
         self.positions = [(int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/2))]
         self.direction = random.choice([NORTH, SOUTH, WEST, EAST])
-        global game_score
-        game_score = 0
 
     def move_snake(self, surface):
 
@@ -126,26 +124,32 @@ def position_check(snake, food_group):
             snake.length += 1
             food.randomize_food()
 
-
 def show_info(surface, snake, speed):
     font = pygame.font.SysFont('Roboto',40)
-    image = font.render(f' score: {game_score}  length: {snake.length}  level: {int(player.length//5)} ', True, GREEN)
+    image = font.render(f' score: {game_score}  length: {snake.length}  level: {int(player.length//10)} ', True, GREEN)
     pos = image.get_rect()
     pos.move_ip(63, 3)
     surface.blit(image, pos)
 
+
+
 def gameover(surface):
+    global game_score
     font = pygame.font.SysFont('Roboto',50)
     image = font.render("GAME OVER", True, BLACK)
     image2 = font.render("press spacebar to restart", True, BLACK)
+    image3 = font.render(f'score: {game_score}', True, BLACK)
     gameOver = pygame.mixer.Sound("sound effect/gameOver.wav")
     gameOver.play()
     pos = image.get_rect()
     pos2 = image2.get_rect()
+    pos3 = image3.get_rect()
     pos.move_ip(165, 240)
-    pos2.move_ip(70, 295)
+    pos2.move_ip(70, 290)
+    pos3.move_ip(200, 340)
     surface.blit(image, pos)
     surface.blit(image2, pos2)
+    surface.blit(image3, pos3)
     pygame.display.update()
     waiting = True
     while waiting:
@@ -156,6 +160,7 @@ def gameover(surface):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     waiting = False
+                    game_score = 0
                     break
 
 player = Snake()
