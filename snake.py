@@ -23,12 +23,13 @@ BEIGE2 = "#E9D3C0"
 BLACK = "#222222"
 WHITE = "#DDDDDD"
 
-NORTH = ( 0, -1)
-SOUTH = ( 0,  1)
-WEST  = (-1,  0)
-EAST  = ( 1,  0)
+NORTH = (0, -1)
+SOUTH = (0,  1)
+WEST = (-1,  0)
+EAST = (1,  0)
 
 # ----- [스네이크 클래스] -----
+
 
 class Snake:
 
@@ -48,7 +49,8 @@ class Snake:
 
         head = self.get_head_position()
         x, y = self.direction
-        next = ((head[0] + (x*GRID)) % WINDOW_WIDTH, (head[1] + (y*GRID)) % WINDOW_HEIGHT)
+        next = ((head[0] + (x*GRID)) % WINDOW_WIDTH,
+                (head[1] + (y*GRID)) % WINDOW_HEIGHT)
         if next in self.positions[2:]:
             self.create_snake()
             gameover(surface)
@@ -66,7 +68,6 @@ class Snake:
             else:
                 draw_object(surface, self.color2, pos)
 
-
     def game_control(self, arrowkey):
         if (arrowkey[0]*-1, arrowkey[1]*-1) == self.direction:
             return
@@ -78,9 +79,10 @@ class Snake:
 
 # ----- [ 먹이 클래스 ] -----
 
+
 class Food:
     def __init__(self):
-        self.position =(0, 0)
+        self.position = (0, 0)
         self.color = RED
         self.randomize_food()
 
@@ -95,11 +97,12 @@ class Food:
 # ----- [ 전역 ] -----
 
 def draw_background(surface):
-    background = pygame.Rect((0,0),(WINDOW_WIDTH, WINDOW_HEIGHT))
+    background = pygame.Rect((0, 0), (WINDOW_WIDTH, WINDOW_HEIGHT))
     draw_grid(surface)
 
+
 def draw_grid(surface):
-    for row in range(0,int(GRID_HEIGHT)):
+    for row in range(0, int(GRID_HEIGHT)):
         for col in range(0, int(GRID_WIDTH)):
             if (row+col) % 2 == 0:
                 rect = pygame.Rect((col*GRID, row*GRID), (GRID, GRID))
@@ -110,7 +113,7 @@ def draw_grid(surface):
 
 
 def draw_object(surface, color, pos):
-    rect = pygame.Rect((pos[0], pos[1]), (GRID,GRID))
+    rect = pygame.Rect((pos[0], pos[1]), (GRID, GRID))
     pygame.draw.rect(surface, color, rect)
 
 
@@ -124,29 +127,30 @@ def position_check(snake, food_group):
             snake.length += 1
             food.randomize_food()
 
+
 def show_info(surface, snake, speed):
-    font = pygame.font.SysFont('Roboto',40)
-    image = font.render(f' score: {game_score}  length: {snake.length}  level: {int(player.length//10)} ', True, GREEN)
+    font = pygame.font.SysFont('Roboto', 40)
+    image = font.render(
+        f' score: {game_score}  length: {snake.length}  level: {int(player.length//10)} ', True, GREEN)
     pos = image.get_rect()
     pos.move_ip(63, 3)
     surface.blit(image, pos)
 
 
-
 def gameover(surface):
     global game_score
-    font = pygame.font.SysFont('Roboto',50)
+    font = pygame.font.SysFont('Roboto', 50)
     image = font.render("GAME OVER", True, BLACK)
     image2 = font.render("press spacebar to restart", True, BLACK)
-    image3 = font.render(f'score: {game_score}', True, BLACK)
+    image3 = font.render(f' Final score: {game_score}', True, BLACK)
     gameOver = pygame.mixer.Sound("sound effect/gameOver.wav")
     gameOver.play()
     pos = image.get_rect()
     pos2 = image2.get_rect()
     pos3 = image3.get_rect()
     pos.move_ip(165, 240)
-    pos2.move_ip(70, 290)
-    pos3.move_ip(200, 340)
+    pos2.move_ip(70, 295)
+    pos3.move_ip(140, 350)
     surface.blit(image, pos)
     surface.blit(image2, pos2)
     surface.blit(image3, pos3)
@@ -163,15 +167,42 @@ def gameover(surface):
                     game_score = 0
                     break
 
+
+def game_start_screen(surface):
+    font = pygame.font.SysFont('Roboto', 50)
+    image = font.render("SNAKE GAME", True, BLACK)
+    image2 = font.render("press spacebar to start", True, BLACK)
+    pos = image.get_rect()
+    pos2 = image2.get_rect()
+    pos.center = ((WINDOW_WIDTH//2), (WINDOW_HEIGHT//2)-30)
+    pos2.center = ((WINDOW_WIDTH//2), (WINDOW_HEIGHT//2)+10)
+
+    surface.blit(image, pos)
+    surface.blit(image2, pos2)
+
+
+def wait_for_key():
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                waiting = False
+
+
 player = Snake()
 run = True
 game_score = 0
 
 # ----- [ 먹이 그룹 ] -----
 
+
 def draw_food_group(food_group, surface):
     for food in food_group:
         food.draw_food(surface)
+
 
 food = Food()
 food_group = []
@@ -189,9 +220,13 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 clock = pygame.time.Clock()
 background = pygame.mixer.Sound("sound effect/background.wav")
 background.play(-1)
+screen.fill(WHITE)  # or whatever your background color is
+game_start_screen(screen)
+pygame.display.update()
+
+wait_for_key()  # wait for the user to press space
 
 while run:
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
